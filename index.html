@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>// JUAN | PORTFOLIO</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Bebas+Neue&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --pu:#9b4dff; --pu-dim:#6b2db3; --pu-glow:rgba(155,77,255,0.5);
+    --pu-faint:rgba(155,77,255,0.06);
+    --bg:#06030d; --bg2:#0b0518; --bg3:#0f0720;
+    --card:#110a22; --border:#1e1035;
+    --text:#c4b5fd; --muted:#4a3a6a; --white:#f0eaff;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{background:var(--bg);color:var(--text);font-family:'Share Tech Mono',monospace;min-height:100vh;overflow-x:hidden}
+  body{cursor:crosshair}
+  a,button{cursor:crosshair}
+  ::-webkit-scrollbar{width:4px}
+  ::-webkit-scrollbar-track{background:var(--bg)}
+  ::-webkit-scrollbar-thumb{background:var(--pu-dim)}
+
+  /* scanlines */
+  .scanlines{position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.1) 2px,rgba(0,0,0,0.1) 4px);pointer-events:none;z-index:9999}
+  /* vignette */
+  .vignette{position:fixed;inset:0;background:radial-gradient(ellipse at center,transparent 35%,rgba(6,3,13,0.82) 100%);pointer-events:none;z-index:9998}
+
+  /* ── BG CANVAS ── */
+  #bg-canvas{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
+
+  /* ── NAV ── */
+  nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:1rem 2rem;border-bottom:1px solid var(--border);background:rgba(6,3,13,0.97);backdrop-filter:blur(8px)}
+  .nav-logo{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:0.3em;color:var(--pu);text-shadow:0 0 16px var(--pu-glow)}
+  .nav-links{display:flex;gap:2rem;list-style:none}
+  .nav-links a{color:var(--muted);text-decoration:none;font-size:0.75rem;letter-spacing:0.15em;text-transform:uppercase;transition:color 0.2s}
+  .nav-links a:hover{color:var(--pu)}
+  .nav-status{font-size:0.7rem;color:var(--pu);animation:blink 1.5s step-end infinite}
+  @keyframes blink{50%{opacity:0}}
+
+  /* ── HERO ── */
+  #hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;padding:6rem 2rem 4rem;z-index:10}
+
+  /* grid */
+  .grid-bg{position:absolute;inset:0;background-image:linear-gradient(var(--pu-faint) 1px,transparent 1px),linear-gradient(90deg,var(--pu-faint) 1px,transparent 1px);background-size:44px 44px;pointer-events:none;z-index:1}
+
+  /* ── MAIN SKULL ── */
+  #skull-wrap{position:relative;margin-bottom:2.5rem;z-index:2}
+  #skull-canvas{display:block;animation:skull-hover 4s ease-in-out infinite}
+  .skull-glow-ring{position:absolute;bottom:-16px;left:50%;transform:translateX(-50%);width:120px;height:18px;background:radial-gradient(ellipse,rgba(155,77,255,0.55) 0%,transparent 70%);animation:glow-ring 4s ease-in-out infinite}
+  @keyframes skull-hover{0%,100%{transform:translateY(0) rotate(-0.3deg)} 50%{transform:translateY(-14px) rotate(0.3deg)}}
+  @keyframes glow-ring{0%,100%{opacity:.7;transform:translateX(-50%) scaleX(1)} 50%{opacity:.2;transform:translateX(-50%) scaleX(.6)}}
+
+  /* hero text */
+  .welcome-tag{font-size:0.7rem;letter-spacing:0.4em;color:var(--pu);text-transform:uppercase;margin-bottom:0.5rem;animation:fadeIn 1s both;z-index:2}
+  .hero-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(4rem,14vw,10rem);letter-spacing:0.08em;line-height:.9;color:var(--white);text-align:center;margin-bottom:.5rem;animation:fadeIn 1s .3s both;position:relative;display:inline-block;z-index:2}
+  .hero-title::before,.hero-title::after{content:attr(data-text);position:absolute;top:0;left:0;width:100%;font-family:'Bebas Neue',sans-serif;font-size:inherit;letter-spacing:inherit}
+  .hero-title::before{color:var(--pu);clip-path:polygon(0 0,100% 0,100% 35%,0 35%);animation:glitch-top 5s infinite steps(1)}
+  .hero-title::after{color:#00d4ff;clip-path:polygon(0 65%,100% 65%,100% 100%,0 100%);animation:glitch-bot 5s infinite steps(1)}
+  @keyframes glitch-top{0%,88%,100%{transform:none;opacity:0}90%{transform:translate(-4px,-2px);opacity:1}92%{transform:translate(4px,0);opacity:1}94%{opacity:0}}
+  @keyframes glitch-bot{0%,88%,100%{transform:none;opacity:0}91%{transform:translate(4px,2px);opacity:1}93%{transform:translate(-4px,0);opacity:1}95%{opacity:0}}
+  /* glitch da caveira — ciclo de 7s, offset para não coincidir com o do nome */
+  @keyframes skull-glitch-top{0%,78%,100%{transform:none;opacity:0}80%{transform:translate(5px,-2px);opacity:1}83%{transform:translate(-3px,0);opacity:1}86%{opacity:0}}
+  @keyframes skull-glitch-bot{0%,78%,100%{transform:none;opacity:0}81%{transform:translate(-5px,2px);opacity:1}84%{transform:translate(3px,0);opacity:1}87%{opacity:0}}
+  .hero-sub{font-size:.8rem;letter-spacing:.3em;color:var(--muted);text-align:center;margin-bottom:2rem;animation:fadeIn 1s .6s both;z-index:2}
+
+  /* terminal */
+  .terminal-box{width:min(560px,90vw);background:var(--bg2);border:1px solid var(--border);border-top:1px solid var(--pu-dim);border-radius:4px;padding:1rem 1.25rem;margin-bottom:2.5rem;animation:fadeIn 1s .9s both;position:relative;z-index:2}
+  .terminal-box::before{content:'● ● ●';position:absolute;top:-1.4rem;left:0;font-size:.6rem;color:var(--muted);letter-spacing:.2em}
+  .t-line{font-size:.75rem;line-height:1.8}
+  .t-prompt{color:var(--pu)}
+  .t-cmd{color:var(--white)}
+  .t-cursor{display:inline-block;width:8px;height:13px;background:var(--pu);vertical-align:middle;animation:blink 1s step-end infinite;margin-left:2px}
+
+  /* buttons */
+  .hero-cta{display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;animation:fadeIn 1s 1.2s both;z-index:2}
+  .btn{font-family:'Share Tech Mono',monospace;font-size:.75rem;letter-spacing:.2em;text-transform:uppercase;padding:.65rem 1.5rem;border:1px solid var(--pu);color:var(--pu);background:transparent;text-decoration:none;transition:all .2s;position:relative;overflow:hidden}
+  .btn::before{content:'';position:absolute;inset:0;background:var(--pu);transform:translateX(-100%);transition:transform .2s;z-index:0}
+  .btn:hover::before{transform:translateX(0)}
+  .btn:hover{color:var(--bg)}
+  .btn span{position:relative;z-index:1}
+  .btn-ghost{border-color:var(--muted);color:var(--muted)}
+  .btn-ghost::before{background:var(--muted)}
+
+  /* divider */
+  .divider{display:flex;align-items:center;gap:1rem;padding:0 2rem;margin:0 auto;max-width:900px;position:relative;z-index:10}
+  .divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border)}
+  .divider-label{font-size:.65rem;letter-spacing:.35em;color:var(--muted);text-transform:uppercase;white-space:nowrap}
+
+  section{padding:5rem 2rem;max-width:1000px;margin:0 auto;position:relative;z-index:10}
+  .section-header{margin-bottom:3rem;display:flex;align-items:center;gap:1rem}
+  .section-num{color:var(--pu);font-size:.7rem}
+  .section-title{font-family:'Bebas Neue',sans-serif;font-size:2.2rem;letter-spacing:.15em;color:var(--white)}
+
+  /* about */
+  .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem}
+  @media(max-width:640px){.about-grid{grid-template-columns:1fr}}
+  .about-card{background:var(--card);border:1px solid var(--border);border-left:3px solid var(--pu);padding:1.25rem 1.5rem;transition:background .2s,border-left-color .2s}
+  .about-card:hover{background:#160d2e;border-left-color:#bf7fff}
+  .about-card h3{font-family:'Rajdhani',sans-serif;font-size:.7rem;letter-spacing:.3em;text-transform:uppercase;color:var(--pu);margin-bottom:.75rem}
+  .about-card p{font-size:.8rem;color:var(--muted);line-height:1.8}
+
+  /* experience */
+  .exp-list{display:flex;flex-direction:column;gap:1.5rem}
+  .exp-item{background:var(--card);border:1px solid var(--border);border-left:3px solid var(--pu-dim);padding:1.25rem 1.5rem;transition:border-left-color .2s,background .2s}
+  .exp-item:hover{background:#160d2e;border-left-color:var(--pu)}
+  .exp-header{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:.5rem;margin-bottom:.5rem}
+  .exp-title{font-family:'Rajdhani',sans-serif;font-size:1rem;font-weight:700;color:var(--white);letter-spacing:.05em}
+  .exp-date{font-size:.65rem;color:var(--pu);letter-spacing:.1em}
+  .exp-org{font-size:.7rem;color:var(--pu-dim);letter-spacing:.1em;margin-bottom:.5rem}
+  .exp-desc{font-size:.78rem;color:var(--muted);line-height:1.7}
+
+  /* skills */
+  .skills-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1px;background:var(--border);border:1px solid var(--border)}
+  .skill-item{background:var(--bg2);padding:1.25rem 1.5rem;transition:background .2s}
+  .skill-item:hover{background:var(--card)}
+  .skill-item:hover .skill-bar-fill{box-shadow:0 0 8px var(--pu)}
+  .skill-name{font-size:.75rem;letter-spacing:.1em;color:var(--white);margin-bottom:.5rem;display:flex;justify-content:space-between}
+  .skill-name span{color:var(--muted);font-size:.7rem}
+  .skill-bar{height:2px;background:var(--border);width:100%}
+  .skill-bar-fill{height:100%;background:var(--pu);transition:width 1.2s ease}
+  .skill-tag{display:inline-block;font-size:.6rem;letter-spacing:.15em;color:var(--muted);border:1px solid var(--border);padding:2px 6px;margin-top:.5rem;text-transform:uppercase}
+  .tools-wrap{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1rem}
+  .tool-tag{font-size:.65rem;letter-spacing:.1em;padding:4px 10px;background:var(--bg3);border:1px solid var(--border);color:var(--muted);transition:all .2s}
+  .tool-tag:hover{border-color:var(--pu);color:var(--pu)}
+
+  /* ctf */
+  .ctf-list{display:flex;flex-direction:column;gap:1px}
+  .ctf-item{display:grid;grid-template-columns:3rem 1fr auto;align-items:center;gap:1.25rem;padding:1rem 1.25rem;background:var(--card);border-left:2px solid transparent;transition:all .2s;text-decoration:none;color:inherit}
+  .ctf-item:hover{border-left-color:var(--pu);background:#160d2e}
+  .ctf-num{font-size:.65rem;color:var(--muted);text-align:center}
+  .ctf-info h4{font-size:.85rem;color:var(--white);margin-bottom:.2rem;font-family:'Rajdhani',sans-serif;font-weight:700;letter-spacing:.05em}
+  .ctf-info p{font-size:.7rem;color:var(--muted)}
+  .ctf-badge{font-size:.6rem;padding:3px 8px;letter-spacing:.1em;text-transform:uppercase;border:1px solid}
+  .badge-web{color:#ff8800;border-color:#ff8800}
+  .badge-bounty{color:var(--pu);border-color:var(--pu)}
+  .badge-osint{color:#00d4ff;border-color:#00d4ff}
+  .badge-net{color:#a0ff80;border-color:#a0ff80}
+  .badge-social{color:#ff80d5;border-color:#ff80d5}
+
+  /* certs */
+  .certs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem}
+  .cert-card{background:var(--card);border:1px solid var(--border);padding:1.25rem;position:relative;overflow:hidden;transition:border-color .2s}
+  .cert-card:hover{border-color:var(--pu-dim)}
+  .cert-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--pu);transform:scaleX(0);transform-origin:left;transition:transform .3s}
+  .cert-card:hover::after{transform:scaleX(1)}
+  .cert-icon{font-size:1.5rem;margin-bottom:.75rem}
+  .cert-name{font-family:'Rajdhani',sans-serif;font-size:1rem;font-weight:700;color:var(--white);letter-spacing:.05em;margin-bottom:.25rem}
+  .cert-org{font-size:.65rem;color:var(--muted);letter-spacing:.15em;text-transform:uppercase;margin-bottom:.5rem}
+  .cert-status{font-size:.6rem;padding:2px 6px;letter-spacing:.1em;text-transform:uppercase}
+  .status-done{background:rgba(167,139,250,.1);color:#a78bfa;border:1px solid #6b21a8}
+  .status-progress{background:rgba(251,191,36,.08);color:#fbbf24;border:1px solid #92400e}
+  .status-planned{background:rgba(85,85,85,.1);color:var(--muted);border:1px solid var(--border)}
+
+  footer{border-top:1px solid var(--border);padding:2rem;text-align:center;font-size:.65rem;color:var(--muted);letter-spacing:.2em;position:relative;z-index:10}
+
+  @keyframes fadeIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+  .reveal{opacity:0;transform:translateY(20px);transition:opacity .7s,transform .7s}
+  .reveal.visible{opacity:1;transform:none}
+</style>
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+<div class="scanlines"></div>
+<div class="vignette"></div>
+
+<nav>
+  <div class="nav-logo">JUAN</div>
+  <ul class="nav-links">
+    <li><a href="#sobre">about</a></li>
+    <li><a href="#exp">exp</a></li>
+    <li><a href="#skills">skills</a></li>
+    <li><a href="#ctf">ctf</a></li>
+    <li><a href="#certs">certs</a></li>
+  </ul>
+  <div class="nav-status">● ONLINE</div>
+</nav>
+
+<section id="hero">
+  <div class="grid-bg"></div>
+
+  <div id="skull-wrap" style="position:relative;display:inline-block;animation:skull-hover 4s ease-in-out infinite;">
+    <pre id="skull-static" style="font-family:'Share Tech Mono',monospace;font-size:clamp(0.38rem,0.85vw,0.72rem);line-height:1.18;color:#9b4dff;text-shadow:0 0 8px rgba(155,77,255,0.7),0 0 18px rgba(155,77,255,0.35);text-align:left;display:block;margin:0;padding:0;position:relative;"></pre>
+    <pre id="skull-glitch-r" aria-hidden="true" style="font-family:'Share Tech Mono',monospace;font-size:clamp(0.38rem,0.85vw,0.72rem);line-height:1.18;color:#9b4dff;text-align:left;display:block;margin:0;padding:0;position:absolute;top:0;left:0;pointer-events:none;clip-path:polygon(0 0,100% 0,100% 35%,0 35%);animation:skull-glitch-top 7s infinite steps(1);"></pre>
+    <pre id="skull-glitch-b" aria-hidden="true" style="font-family:'Share Tech Mono',monospace;font-size:clamp(0.38rem,0.85vw,0.72rem);line-height:1.18;color:#00d4ff;text-align:left;display:block;margin:0;padding:0;position:absolute;top:0;left:0;pointer-events:none;clip-path:polygon(0 65%,100% 65%,100% 100%,0 100%);animation:skull-glitch-bot 7s infinite steps(1);"></pre>
+    <pre id="skull-jaw"    style="font-family:'Share Tech Mono',monospace;font-size:clamp(0.38rem,0.85vw,0.72rem);line-height:1.18;color:#9b4dff;text-shadow:0 0 8px rgba(155,77,255,0.7),0 0 18px rgba(155,77,255,0.35);text-align:left;display:block;margin:0;padding:0;"></pre>
+  </div>
+
+  <h1 class="hero-title" data-text="JUAN">JUAN</h1>
+  <div class="welcome-tag">// acesso autorizado — identidade verificada</div>
+  <p class="hero-sub">[ HACKER · CTFER · SECURITY RESEARCHER ]</p>
+
+  <div class="terminal-box">
+    <div class="t-line"><span class="t-prompt">root@juan</span>:<span style="color:#7c3aed">~</span>$ <span class="t-cmd" id="typewriter"></span><span class="t-cursor"></span></div>
+    <div class="t-line" id="t-out" style="min-height:1.3rem;color:#a78bfa"></div>
+  </div>
+
+  <script type="application/json" id="skull-data">
+{
+  "skull": [
+    "                       uuuuuuuuuuuuuuuuuuuuu.",
+    "                   .u$$$$$$$$$$$$$$$$$$$$$$$$$$W.",
+    "                 u$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$Wu.",
+    "               $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$i",
+    "              $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$",
+    "         `    $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$",
+    "           .i$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$i",
+    "           $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$W",
+    "          .$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$W",
+    "         .$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$i",
+    "         #$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$.",
+    "         W$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$",
+    "$u       #$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$~",
+    "$#      `\"$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$",
+    "$i        $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$",
+    "$$        #$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$",
+    "$$         $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$",
+    "#$.        $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$#",
+    " $$      $iW$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$!",
+    " $$i      $$$$$$$#\"\" `\"\"\"#$$$$$$$$$$$$$$$$$#\"\"\"\"\"\"#$$$$$$$$$$$$$$$W",
+    " #$$W    `$$$#\"            \"       !$$$$$`           `\"#$$$$$$$$$$#",
+    "  $$$     ``                 ! !iuW$$$$$                 #$$$$$$$#",
+    "  #$$    $u                  $   $$$$$$$                  $$$$$$$~",
+    "   \"#    #$$i.               #   $$$$$$$.                 `$$$$$$",
+    "          $$$$$i.                \"\"\"#$$$$i.               .$$$$#",
+    "          $$$$$$$$!         .   `    $$$$$$$$$i           $$$$$",
+    "          `$$$$$  $iWW   .uW`        #$$$$$$$$$W.       .$$$$$$#",
+    "            \"#$$$$$$$$$$$$#`          $$$$$$$$$$$iWiuuuW$$$$$$$$W",
+    "               !#\"\"    \"\"             `$$$$$$$##$$$$$$$$$$$$$$$$",
+    "          i$$$$    .                   !$$$$$$ .$$$$$$$$$$$$$$$#",
+    "         $$$$$$$$$$`                    $$$$$$$$$Wi$$$$$$#\"#$$`",
+    "         #$$$$$$$$$W.                   $$$$$$$$$$$#   ``",
+    "          `$$$$##$$$$!       i$u.  $. .i$$$$$$$$$#\"\"",
+    "             \"     `#W       $$$$$$$$$$$$$$$$$$$`      u$#",
+    "                            W$$$$$$$$$$$$$$$$$$      $$$$W",
+    "                            $$`!$$$##$$$$``$$$$      $$$$!",
+    "                           i$\" $$$$  $$#\"`  \"\"\"     W$$$$"
+  ],
+  "jaw": [
+    [
+      "                                                   W$$$$!",
+      "                      uW$$  uu  uu.  $$$  $$$Wu#   $$$$$$",
+      "                     ~$$$$iu$$iu$$$uW$$! $$$$$$i .W$$$$$$",
+      "             ..  !   \"#$$$$$$$$$$##$$$$$$$$$$$$$$$$$$$$#\"",
+      "             $$W  $     \"#$$$$$$$iW$$$$$$$$$$$$$$$$$$$$$W",
+      "             $#`   `       \"\"#$$$$$$$$$$$$$$$$$$$$$$$$$$$",
+      "                              !$$$$$$$$$$$$$$$$$$$$$#`",
+      "                              $$$$$$$$$$$$$$$$$$$$$$!",
+      "                            $$$$$$$$$$$$$$$$$$$$$$$`",
+      "                             $$$$$$$$$$$$$$$$$$$$\""
+    ],
+    [
+      "                                                                   ",
+      "                                                   W$$$$!",
+      "                      uW$$  uu  uu.  $$$  $$$Wu#   $$$$$$",
+      "                     ~$$$$iu$$iu$$$uW$$! $$$$$$i .W$$$$$$",
+      "             ..  !   \"#$$$$$$$$$$##$$$$$$$$$$$$$$$$$$$$#\"",
+      "             $$W  $     \"#$$$$$$$iW$$$$$$$$$$$$$$$$$$$$$W",
+      "             $#`   `       \"\"#$$$$$$$$$$$$$$$$$$$$$$$$$$$",
+      "                              !$$$$$$$$$$$$$$$$$$$$$#`",
+      "                              $$$$$$$$$$$$$$$$$$$$$$!",
+      "                            $$$$$$$$$$$$$$$$$$$$$$$`",
+      "                             $$$$$$$$$$$$$$$$$$$$\""
+    ],
+    [
+      "                                                                   ",
+      "                                                                   ",
+      "                                                   W$$$$!",
+      "                      uW$$  uu  uu.  $$$  $$$Wu#   $$$$$$",
+      "                     ~$$$$iu$$iu$$$uW$$! $$$$$$i .W$$$$$$",
+      "             ..  !   \"#$$$$$$$$$$##$$$$$$$$$$$$$$$$$$$$#\"",
+      "             $$W  $     \"#$$$$$$$iW$$$$$$$$$$$$$$$$$$$$$W",
+      "             $#`   `       \"\"#$$$$$$$$$$$$$$$$$$$$$$$$$$$",
+      "                              !$$$$$$$$$$$$$$$$$$$$$#`",
+      "                              $$$$$$$$$$$$$$$$$$$$$$!",
+      "                            $$$$$$$$$$$$$$$$$$$$$$$`",
+      "                             $$$$$$$$$$$$$$$$$$$$\""
+    ],
+    [
+      "                                                                   ",
+      "                                                                   ",
+      "                                                                   ",
+      "                                                   W$$$$!",
+      "                      uW$$  uu  uu.  $$$  $$$Wu#   $$$$$$",
+      "                     ~$$$$iu$$iu$$$uW$$! $$$$$$i .W$$$$$$",
+      "             ..  !   \"#$$$$$$$$$$##$$$$$$$$$$$$$$$$$$$$#\"",
+      "             $$W  $     \"#$$$$$$$iW$$$$$$$$$$$$$$$$$$$$$W",
+      "             $#`   `       \"\"#$$$$$$$$$$$$$$$$$$$$$$$$$$$",
+      "                              !$$$$$$$$$$$$$$$$$$$$$#`",
+      "                              $$$$$$$$$$$$$$$$$$$$$$!",
+      "                            $$$$$$$$$$$$$$$$$$$$$$$`",
+      "                             $$$$$$$$$$$$$$$$$$$$\""
+    ]
+  ]
+}
+  </script>
+  <script>
+  (function(){
+    var elStatic = document.getElementById('skull-static');
+    var elJaw    = document.getElementById('skull-jaw');
+    var elR      = document.getElementById('skull-glitch-r');
+    var elB      = document.getElementById('skull-glitch-b');
+    var d = JSON.parse(document.getElementById('skull-data').textContent);
+
+    // Skull fixo — popula as 3 layers de uma vez
+    var skullText = d.skull.join('\n');
+    elStatic.textContent = skullText;
+    elR.textContent      = skullText;
+    elB.textContent      = skullText;
+
+    // Jaw absolutamente posicionado abaixo do static
+    elJaw.style.position = 'absolute';
+    elJaw.style.left     = '0';
+    elJaw.style.top      = '100%';
+
+    var SEQ = [];
+    for(var i=0;i<150;i++) SEQ.push(0);
+    SEQ.push(0,0,1,1,2,2,3,3,3,3,3,2,2,1,1,0,0,0,0,0);
+    SEQ.push(0,1,2,3,3,2,1,0,0,0);
+    SEQ.push(0,0,0,1,1,1,2,2,2,3,3,3,3,3,2,2,1,1,0,0);
+    var CYCLE = SEQ.length;
+
+    var RENDERED = d.jaw.map(function(frame){ return frame.join('\n'); });
+
+    var f = 0;
+    function render(){
+      elJaw.textContent = RENDERED[SEQ[f % CYCLE]];
+      f++;
+      requestAnimationFrame(render);
+    }
+    render();
+  })();
+  </script>
+
+  <div class="hero-cta">
+    <a class="btn" href="#exp"><span>// Experiência</span></a>
+    <a class="btn btn-ghost" href="#certs"><span>// Certificações</span></a>
+  </div>
+</section>
+
+<div class="divider"><span class="divider-label">// SOBRE</span></div>
+<section id="sobre">
+  <div class="section-header reveal">
+    <span class="section-num">01.</span>
+    <h2 class="section-title">QUEM SOU</h2>
+  </div>
+  <div class="about-grid">
+    <div class="about-card reveal">
+      <h3>// identidade</h3>
+      <p>Juan Pablo Boluda — pesquisador de segurança ofensiva com foco em pentest e red team. Atualmente atuando em bug bounty nas plataformas HackerOne e BugHunt, caçando vulnerabilidades reais em empresas ao redor do mundo.</p>
+    </div>
+    <div class="about-card reveal">
+      <h3>// missão</h3>
+      <p>Crescimento contínuo na área de segurança da informação. Cada vulnerability reportada é conhecimento consolidado. Cada lab resolvido é uma mente mais afiada para os próximos alvos.</p>
+    </div>
+    <div class="about-card reveal">
+      <h3>// áreas de interesse</h3>
+      <p>Web exploitation · Binary exploitation · Engenharia social · OSINT · Pentest · Red Teaming · Análise de logs · Information gathering</p>
+    </div>
+    <div class="about-card reveal">
+      <h3>// contato</h3>
+      <p><a href="https://www.linkedin.com/in/juan-pablo-3a367228a" target="_blank" rel="noopener" style="color:var(--pu);text-decoration:none;">linkedin.com/in/juan-pablo-3a367228a</a></p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><span class="divider-label">// EXPERIÊNCIA</span></div>
+<section id="exp">
+  <div class="section-header reveal">
+    <span class="section-num">02.</span>
+    <h2 class="section-title">EXPERIÊNCIA</h2>
+  </div>
+  <div class="exp-list">
+    <div class="exp-item reveal">
+      <div class="exp-header">
+        <div class="exp-title">Bug Bounty Hunter</div>
+        <div class="exp-date">fev/2026 — presente</div>
+      </div>
+      <div class="exp-org">// HackerOne — Plataforma de Bug Bounty</div>
+      <div class="exp-desc">Realização de testes de intrusão para diversas empresas, identificando e reportando vulnerabilidades em programas de bug bounty. Foco em web exploitation, information gathering e OSINT.</div>
+    </div>
+    <div class="exp-item reveal">
+      <div class="exp-header">
+        <div class="exp-title">Bug Bounty Hunter</div>
+        <div class="exp-date">fev/2026 — presente</div>
+      </div>
+      <div class="exp-org">// BugHunt — Plataforma de Bug Bounty</div>
+      <div class="exp-desc">Testes ativos em programas de bug bounty focados no mercado brasileiro. Reportando vulnerabilidades e contribuindo para a segurança de empresas nacionais.</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><span class="divider-label">// SKILLS & TOOLS</span></div>
+<section id="skills">
+  <div class="section-header reveal">
+    <span class="section-num">03.</span>
+    <h2 class="section-title">ARSENAL</h2>
+  </div>
+  <div class="skills-grid reveal">
+    <div class="skill-item">
+      <div class="skill-name">Web Exploitation <span>85%</span></div>
+      <div class="skill-bar"><div class="skill-bar-fill" style="width:0%" data-w="85%"></div></div>
+      <span class="skill-tag">offensive</span>
+    </div>
+    <div class="skill-item">
+      <div class="skill-name">Linux / Bash <span>82%</span></div>
+      <div class="skill-bar"><div class="skill-bar-fill" style="width:0%" data-w="82%"></div></div>
+      <span class="skill-tag">systems</span>
+    </div>
+    <div class="skill-item">
+      <div class="skill-name">OSINT / Info Gathering <span>80%</span></div>
+      <div class="skill-bar"><div class="skill-bar-fill" style="width:0%" data-w="80%"></div></div>
+      <span class="skill-tag">intel</span>
+    </div>
+    <div class="skill-item">
+      <div class="skill-name">Python / Scripting <span>75%</span></div>
+      <div class="skill-bar"><div class="skill-bar-fill" style="width:0%" data-w="75%"></div></div>
+      <span class="skill-tag">code</span>
+    </div>
+    <div class="skill-item">
+      <div class="skill-name">Network Analysis <span>74%</span></div>
+      <div class="skill-bar"><div class="skill-bar-fill" style="width:0%" data-w="74%"></div></div>
+      <span class="skill-tag">network</span>
+    </div>
+    <div class="skill-item">
+      <div class="skill-name">Engenharia Social <span>72%</span></div>
+      <div class="skill-bar"><div class="skill-bar-fill" style="width:0%" data-w="72%"></div></div>
+      <span class="skill-tag">social</span>
+    </div>
+    <div class="skill-item">
+      <div class="skill-name">Análise de Logs <span>68%</span></div>
+      <div class="skill-bar"><div class="skill-bar-fill" style="width:0%" data-w="68%"></div></div>
+      <span class="skill-tag">defensive</span>
+    </div>
+    <div class="skill-item">
+      <div class="skill-name">C / PowerShell <span>60%</span></div>
+      <div class="skill-bar"><div class="skill-bar-fill" style="width:0%" data-w="60%"></div></div>
+      <span class="skill-tag">code</span>
+    </div>
+  </div>
+  <div class="tools-wrap reveal" style="margin-top:2rem">
+    <span class="tool-tag">Burp Suite</span><span class="tool-tag">Nmap</span>
+    <span class="tool-tag">Metasploit</span><span class="tool-tag">Scapy</span>
+    <span class="tool-tag">Netcat</span><span class="tool-tag">Wireshark</span>
+    <span class="tool-tag">SQLmap</span><span class="tool-tag">Google Hacking</span>
+    <span class="tool-tag">Gobuster</span><span class="tool-tag">ffuf</span>
+    <span class="tool-tag">Hashcat</span><span class="tool-tag">Python</span>
+    <span class="tool-tag">Bash</span><span class="tool-tag">PowerShell</span>
+    <span class="tool-tag">C</span><span class="tool-tag">Kali Linux</span>
+  </div>
+</section>
+
+<div class="divider"><span class="divider-label">// CTF & BUG BOUNTY</span></div>
+<section id="ctf">
+  <div class="section-header reveal">
+    <span class="section-num">04.</span>
+    <h2 class="section-title">CTF & BUG BOUNTY</h2>
+  </div>
+  <div class="ctf-list">
+
+  </div>
+</section>
+
+<div class="divider"><span class="divider-label">// CERTIFICAÇÕES & EDUCAÇÃO</span></div>
+<section id="certs">
+  <div class="section-header reveal">
+    <span class="section-num">05.</span>
+    <h2 class="section-title">FORMAÇÃO</h2>
+  </div>
+  <div class="certs-grid">
+    <div class="cert-card reveal">
+      <div class="cert-icon"></div>
+      <div class="cert-name">DCPT</div>
+      <div class="cert-org">Desec Security</div>
+      <span class="cert-status status-progress">em andamento</span>
+    </div>
+    <div class="cert-card reveal">
+      <div class="cert-icon"></div>
+      <div class="cert-name">C3SA</div>
+      <div class="cert-org">CyberWareFares</div>
+      <span class="cert-status status-progress">em andamento</span>
+    </div>
+    <div class="cert-card reveal">
+      <div class="cert-icon"></div>
+      <div class="cert-name">Desec Pentest Profissional</div>
+      <div class="cert-org">Desec Security</div>
+      <span class="cert-status status-progress">em andamento</span>
+    </div>
+    <div class="cert-card reveal">
+      <div class="cert-icon"></div>
+      <div class="cert-name">Desec Pentest Experience V2</div>
+      <div class="cert-org">Desec Security</div>
+      <span class="cert-status status-progress">em andamento</span>
+    </div>
+    <div class="cert-card reveal">
+      <div class="cert-icon"></div>
+      <div class="cert-name">MCSI</div>
+      <div class="cert-org">MCSI Institute</div>
+      <span class="cert-status status-progress">em andamento</span>
+    </div>
+    <div class="cert-card reveal">
+      <div class="cert-icon"></div>
+      <div class="cert-name">Ciência da Computação</div>
+      <div class="cert-org">Estácio — fev/2026</div>
+      <span class="cert-status status-progress">cursando</span>
+    </div>
+    <div class="cert-card reveal">
+      <div class="cert-icon"></div>
+      <div class="cert-name">Inglês Avançado</div>
+      <div class="cert-org">Wizard — 2016–2024</div>
+      <span class="cert-status status-done">fluente</span>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p style="margin-bottom:.4rem">[ JUAN PABLO BOLUDA · SECURITY RESEARCH PORTFOLIO ]</p>
+  <p>root@juan:~$ <span style="color:var(--pu)">echo</span> "stay in the shadows"</p>
+</footer>
+
+<script>
+/* ═══════════════════════════════════════════════
+   BACKGROUND — matrix rain + floating skulls
+═══════════════════════════════════════════════ */
+(function(){
+  const cv  = document.getElementById('bg-canvas');
+  const ctx = cv.getContext('2d');
+  let W, H;
+
+  function resize(){
+    W = cv.width  = window.innerWidth;
+    H = cv.height = window.innerHeight;
+    initCols();
+  }
+  window.addEventListener('resize', resize);
+
+  const CHARS = '01ABCDEFabcdef<>{}[]/\\;:アイウエカキクケコサシスセソタチツ';
+  const FS = 14;
+  let cols = [];
+
+  function initCols(){
+    cols = [];
+    const n = Math.ceil(W / FS);
+    for(let i=0;i<n;i++) cols.push({
+      y:      Math.floor(Math.random() * H / FS),
+      speed:  0.25 + Math.random() * 0.6,
+      bright: Math.random() > 0.93,
+      op:     0.04 + Math.random() * 0.1,
+    });
+  }
+
+  function drawRain(){
+    /* fade trail */
+    ctx.fillStyle = 'rgba(6,3,13,0.12)';
+    ctx.fillRect(0, 0, W, H);
+
+    ctx.font = FS + 'px Share Tech Mono, monospace';
+    cols.forEach((c, i) => {
+      const ch = CHARS[Math.floor(Math.random() * CHARS.length)];
+      const x  = i * FS;
+      const y  = c.y * FS;
+      /* head bright */
+      ctx.fillStyle = c.bright
+        ? `rgba(210,160,255,${c.op * 3.5})`
+        : `rgba(155,77,255,${c.op * 2.8})`;
+      ctx.fillText(ch, x, y);
+      c.y += c.speed;
+      if(c.y * FS > H + FS * 25){
+        c.y     = -Math.random() * 30;
+        c.speed = 0.25 + Math.random() * 0.6;
+        c.bright= Math.random() > 0.93;
+        c.op    = 0.04 + Math.random() * 0.1;
+      }
+    });
+  }
+
+  W = cv.width  = window.innerWidth;
+  H = cv.height = window.innerHeight;
+  ctx.fillStyle = '#06030d';
+  ctx.fillRect(0, 0, W, H);
+  initCols();
+
+  function bgLoop(){
+    drawRain();
+    requestAnimationFrame(bgLoop);
+  }
+  bgLoop();
+})();
+
+
+
+
+
+
+/* ── TYPEWRITER ── */
+const lines=[
+  {cmd:'whoami',          out:'// juan pablo boluda · bug bounty hunter'},
+  {cmd:'cat mission.txt', out:'// hack. learn. report. repeat.'},
+  {cmd:'ls ./skills/',    out:'// web  osint  network  python  bash  social-eng'},
+  {cmd:'cat status.txt',  out:'// hackerone + bughunt · active · seeking vulns'},
+];
+let li=0,ci=0,ph='typing';
+const el=document.getElementById('typewriter');
+const tout=document.getElementById('t-out');
+function tick(){
+  const line=lines[li];
+  if(ph==='typing'){
+    if(ci<line.cmd.length){el.textContent+=line.cmd[ci++];setTimeout(tick,60+Math.random()*50);}
+    else{ph='pause';setTimeout(tick,700);}
+  }else if(ph==='pause'){
+    tout.textContent=line.out;ph='wait';setTimeout(tick,2100);
+  }else{
+    el.textContent='';tout.textContent='';ci=0;li=(li+1)%lines.length;ph='typing';setTimeout(tick,400);
+  }
+}
+setTimeout(tick,1000);
+
+/* ── REVEAL + SKILL BARS ── */
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add('visible');
+      e.target.querySelectorAll('.skill-bar-fill').forEach(b=>{b.style.width=b.dataset.w;});
+    }
+  });
+},{threshold:0.15});
+document.querySelectorAll('.reveal').forEach(e=>obs.observe(e));
+</script>
+</body>
+</html>
