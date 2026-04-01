@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Caso № 001 — Juan Pablo · Investigador</title>
+<link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=Share+Tech+Mono&family=Noto+Serif+JP:wght@300;400;700&family=Bebas+Neue&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════
+   VARIÁVEIS — PALETA DO L
+══════════════════════════════════════ */
+:root {
+  --void:      #000000;
+  --void2:     #080808;
+  --void3:     #0f0f0f;
+  --void4:     #141414;
+  --void5:     #1a1a1a;
+  --white:     #e8e8e8;
+  --white2:    #c0c0c0;
+  --white3:    #888;
+  --white4:    #444;
+  --accent:    #c8a96e;      /* âmbar/doce — tom de bolo/chocolate */
+  --accent2:   #8b6a3a;
+  --accent3:   #5a4020;
+  --red:       #cc2222;
+  --red-dim:   #6b1010;
+  --blue-l:    #4a7ab5;      /* azul frio — monitores */
+  --green:     #2a6640;
+  --border:    rgba(200,169,110,0.15);
+  --border2:   rgba(200,169,110,0.35);
+  --shadow:    rgba(200,169,110,0.08);
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+
+/* ── CURSOR PERSONALIZADO ── */
+body { cursor: crosshair; }
+a, button { cursor: crosshair; }
+
+body {
+  background: var(--void);
+  color: var(--white);
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 14px;
+  line-height: 1.75;
+  overflow-x: hidden;
+}
+
+/* ── LINHAS DE GRADE — sala de investigação ── */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image:
+    linear-gradient(rgba(200,169,110,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(200,169,110,0.025) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── VINHETA LATERAL ── */
+body::after {
+  content: '';
+  position: fixed; inset: 0;
+  background: radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.85) 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ── NOISE GRAIN ── */
+.grain {
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 2; opacity: 0.6;
+}
+
+/* ══════════════════════════════════════
+   SCROLLBAR
+══════════════════════════════════════ */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--void); }
+::-webkit-scrollbar-thumb { background: var(--accent3); }
+::selection { background: rgba(200,169,110,0.2); }
+
+/* ══════════════════════════════════════
+   NAV — BARRA DO INVESTIGADOR
+══════════════════════════════════════ */
+nav {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 900;
+  background: rgba(0,0,0,0.95);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 3rem;
+  height: 52px;
+  backdrop-filter: blur(8px);
+}
+
+.nav-id {
+  display: flex; align-items: baseline; gap: 1rem;
+}
+.nav-l {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2.2rem; color: var(--white); line-height: 1;
+  letter-spacing: 0.1em;
+  text-shadow: 0 0 20px rgba(200,169,110,0.4);
+}
+.nav-case {
+  font-size: 0.6rem; letter-spacing: 0.3em;
+  color: var(--white3); text-transform: uppercase;
+}
+
+nav ul { list-style: none; display: flex; gap: 2.5rem; }
+nav ul a {
+  font-size: 0.62rem; letter-spacing: 0.25em; text-transform: uppercase;
+  color: var(--white3); text-decoration: none;
+  transition: color 0.2s;
+  position: relative;
+}
+nav ul a::after {
+  content: '';
+  position: absolute; bottom: -4px; left: 0; right: 0; height: 1px;
+  background: var(--accent);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform 0.25s ease;
+}
+nav ul a:hover { color: var(--accent); }
+nav ul a:hover::after { transform: scaleX(1); }
+
+.nav-prob {
+  font-size: 0.6rem; letter-spacing: 0.15em;
+  color: var(--white4);
+}
+.nav-prob strong { color: var(--accent); }
+
+/* ══════════════════════════════════════
+   HERO — DOSSIER DO SUSPEITO
+══════════════════════════════════════ */
+#hero {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1.6fr;
+  position: relative; z-index: 10;
+  padding-top: 52px;
+}
+
+/* Coluna esquerda — foto/silhueta do L sentado */
+.hero-left {
+  display: flex; align-items: flex-end; justify-content: center;
+  padding: 3rem 2rem 0;
+  position: relative;
+  border-right: 1px solid var(--border);
+  overflow: visible;
+}
+
+/* J gótico — coluna esquerda */
+.j-letter-wrap {
+  position: absolute;
+  top: 52px; /* abaixo da nav */
+  left: 50%;
+  bottom: 45%; /* fica acima da zona dos monitores */
+  transform: translateX(-50%);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 2;
+  pointer-events: none;
+}
+.j-gothic {
+  width: 220px; height: auto;
+  filter: drop-shadow(0 0 40px rgba(200,169,110,0.15));
+  animation: float 6s ease-in-out infinite;
+}
+@keyframes float {
+  0%,100% { transform: translateY(0); }
+  50%      { transform: translateY(-8px); }
+}
+
+/* Monitores — cena inferior da coluna esquerda */
+.monitors-scene {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 45%;
+  display: flex; align-items: flex-end; justify-content: center;
+  gap: 8px; padding: 0 1rem 1rem;
+  z-index: 3;
+}
+.monitor-canvas {
+  border-radius: 3px 3px 0 0;
+  box-shadow:
+    0 0 18px rgba(255,255,255,0.12),
+    0 0 40px rgba(255,255,255,0.06),
+    inset 0 0 6px rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  image-rendering: pixelated;
+}
+
+/* Iluminação ambiente dos monitores — dissipa além da coluna */
+.hero-left::after {
+  content: '';
+  position: absolute;
+  left: -5%; right: -120%; /* vaza para a direita mas não até a borda */
+  bottom: 0; top: 30%;
+  background:
+    radial-gradient(ellipse 55% 60% at 30% 100%, rgba(200,215,255,0.09) 0%, transparent 75%),
+    radial-gradient(ellipse 40% 40% at 25% 95%,  rgba(180,210,255,0.06) 0%, transparent 65%);
+  pointer-events: none; z-index: 4;
+}
+
+.hero-left-label {
+  position: absolute; top: 5rem; left: 1.5rem;
+  writing-mode: vertical-rl; transform: rotate(180deg);
+  font-size: 0.55rem; letter-spacing: 0.4em; text-transform: uppercase;
+  color: var(--white4);
+}
+
+/* Coluna direita — ficha do suspeito */
+.hero-right {
+  padding: 7rem 4rem 4rem 4rem;
+  display: flex; flex-direction: column; justify-content: center;
+  position: relative;
+}
+
+/* stamp removed */
+
+.dossier-tag {
+  font-size: 0.58rem; letter-spacing: 0.3em; text-transform: uppercase;
+  color: var(--accent2); margin-bottom: 1.8rem;
+  display: flex; align-items: center; gap: 0.8rem;
+}
+.dossier-tag::before {
+  content: ''; display: inline-block;
+  width: 24px; height: 1px; background: var(--accent2);
+}
+
+h1.suspect-name {
+  font-family: 'IM Fell English', serif;
+  font-size: clamp(3rem,6vw,5.5rem);
+  line-height: 0.95;
+  color: var(--white);
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.01em;
+}
+h1.suspect-name span {
+  display: block;
+  font-size: clamp(0.9rem,2vw,1.3rem);
+  font-family: 'Share Tech Mono', monospace;
+  font-style: normal;
+  color: var(--white3);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-top: 0.5rem;
+}
+
+.suspect-role {
+  font-size: 0.68rem; letter-spacing: 0.28em; text-transform: uppercase;
+  color: var(--accent2); margin: 1.5rem 0;
+  display: flex; align-items: center; gap: 1rem;
+}
+.suspect-role::after {
+  content: ''; flex: 1; max-width: 120px; height: 1px;
+  background: var(--border2);
+}
+
+/* Caixa de dedução do L */
+.deduction {
+  border: 1px solid var(--border2);
+  background: rgba(200,169,110,0.03);
+  padding: 1.4rem 1.6rem;
+  max-width: 540px;
+  position: relative;
+  margin: 0.5rem 0 1.8rem;
+}
+.deduction::before {
+  content: 'L · DEDUÇÃO INICIAL';
+  position: absolute; top: -0.6rem; left: 1.2rem;
+  background: var(--void);
+  font-size: 0.5rem; letter-spacing: 0.35em;
+  color: var(--accent); padding: 0 0.5rem;
+}
+.deduction::after {
+  content: '';
+  position: absolute; top: 6px; left: 6px; right: -6px; bottom: -6px;
+  border: 1px solid var(--border);
+  pointer-events: none;
+}
+.deduction p {
+  font-family: 'IM Fell English', serif;
+  font-style: italic;
+  color: var(--white2); font-size: 0.95rem; line-height: 1.9;
+}
+.deduction .probability {
+  display: flex; align-items: center; gap: 0.8rem;
+  margin-top: 1rem; padding-top: 0.8rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.6rem; letter-spacing: 0.15em; color: var(--white3);
+  font-family: 'Share Tech Mono', monospace; font-style: normal;
+}
+.prob-bar {
+  flex: 1; height: 2px; background: var(--void4);
+  position: relative; overflow: hidden;
+}
+.prob-bar::after {
+  content: '';
+  position: absolute; inset: 0; right: 3%;
+  background: linear-gradient(90deg, var(--accent3), var(--accent));
+  animation: prob-load 1.8s ease forwards;
+}
+@keyframes prob-load {
+  from { transform: scaleX(0); transform-origin: left; }
+  to   { transform: scaleX(1); transform-origin: left; }
+}
+.prob-val { color: var(--accent); font-weight: 700; font-size: 0.75rem; }
+
+.hero-actions {
+  display: flex; gap: 1rem; flex-wrap: wrap;
+}
+.btn {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.65rem; letter-spacing: 0.22em; text-transform: uppercase;
+  text-decoration: none; padding: 0.65rem 1.5rem;
+  border: 1px solid var(--border2); color: var(--white);
+  background: transparent;
+  transition: all 0.2s; display: inline-flex; align-items: center; gap: 0.5rem;
+  position: relative; overflow: hidden;
+}
+.btn::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: var(--accent);
+  transform: translateX(-101%);
+  transition: transform 0.25s ease;
+  z-index: 0;
+}
+.btn:hover::before { transform: translateX(0); }
+.btn:hover { color: var(--void); border-color: var(--accent); }
+.btn span { position: relative; z-index: 1; }
+.btn-ghost { border-color: var(--border); color: var(--white3); }
+.btn-ghost:hover { color: var(--void); }
+
+/* ── DECORAÇÃO HERO: FIOS VERMELHO (quadro de investigação) ── */
+.evidence-lines {
+  position: absolute; inset: 0; pointer-events: none;
+  overflow: hidden; opacity: 0.12;
+}
+.evidence-lines svg { width: 100%; height: 100%; }
+
+/* ══════════════════════════════════════
+   DIVISORES
+══════════════════════════════════════ */
+.section-div {
+  max-width: 1100px; margin: 0 auto;
+  padding: 0 3rem;
+  position: relative; z-index: 10;
+}
+.section-div hr {
+  border: none; border-top: 1px solid var(--border);
+}
+.section-div span {
+  position: relative; top: -0.6rem; left: 0;
+  display: inline-block;
+  background: var(--void);
+  padding: 0 0.7rem;
+  font-size: 0.55rem; letter-spacing: 0.4em; text-transform: uppercase;
+  color: var(--accent2);
+}
+
+/* ══════════════════════════════════════
+   SECTION WRAPPER
+══════════════════════════════════════ */
+.sw {
+  max-width: 1100px; margin: 0 auto;
+  padding: 5rem 3rem;
+  position: relative; z-index: 10;
+}
+
+/* ── SECTION HEADER ── */
+.sl {
+  display: flex; align-items: center; gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+.sl-num {
+  font-size: 0.55rem; letter-spacing: 0.3em; color: var(--accent2);
+  white-space: nowrap;
+}
+.sl-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(2rem,4vw,3.5rem);
+  letter-spacing: 0.12em; color: var(--white); line-height: 1;
+}
+.sl-rule { flex: 1; height: 1px; background: var(--border); }
+
+/* ══════════════════════════════════════
+   SOBRE — FICHA DO SUSPEITO
+══════════════════════════════════════ */
+.profile-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+}
+.profile-card {
+  background: var(--void2);
+  padding: 1.6rem 2rem;
+  transition: background 0.2s;
+  position: relative;
+}
+.profile-card::after {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent2), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.profile-card:hover { background: var(--void3); }
+.profile-card:hover::after { opacity: 1; }
+
+.profile-card h3 {
+  font-size: 0.55rem; letter-spacing: 0.35em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 0.8rem;
+  display: flex; align-items: center; gap: 0.6rem;
+}
+.profile-card h3::before {
+  content: ''; display: inline-block;
+  width: 16px; height: 1px; background: var(--accent);
+}
+.profile-card p {
+  font-family: 'IM Fell English', serif;
+  color: var(--white2); font-size: 0.92rem; line-height: 1.95;
+}
+.profile-card a {
+  color: var(--accent); text-underline-offset: 4px;
+  transition: color 0.2s; text-decoration: none;
+  border-bottom: 1px solid var(--border2);
+}
+.profile-card a:hover { color: var(--white); }
+
+/* ══════════════════════════════════════
+   EXPERIÊNCIA — LINHA DO TEMPO
+══════════════════════════════════════ */
+.timeline { padding-left: 2rem; }
+.tl-item {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  gap: 0 2.5rem;
+  padding-bottom: 3rem;
+  position: relative;
+}
+.tl-item:last-child { padding-bottom: 0; }
+.tl-item::before {
+  content: '';
+  position: absolute; left: 90px; top: 0; bottom: 0;
+  width: 1px; background: var(--border2);
+  margin-left: 2.5rem;
+}
+.tl-dot {
+  position: absolute; left: 90px; top: 4px;
+  margin-left: calc(2.5rem - 5px);
+  width: 10px; height: 10px;
+  border: 1px solid var(--accent);
+  background: var(--void);
+  transform: rotate(45deg);
+  z-index: 1;
+}
+.tl-year {
+  font-size: 0.6rem; letter-spacing: 0.1em;
+  color: var(--white4); text-align: right;
+  padding-top: 2px; line-height: 1.5;
+}
+.tl-content { padding-left: 2rem; }
+.tl-title {
+  font-family: 'IM Fell English', serif;
+  font-size: 1.15rem; color: var(--white);
+  margin-bottom: 0.2rem;
+}
+.tl-org {
+  font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--accent2); margin-bottom: 0.6rem;
+}
+.tl-badge {
+  display: inline-block;
+  border: 1px solid var(--border2);
+  padding: 0.1rem 0.6rem; font-size: 0.58rem;
+  letter-spacing: 0.12em; color: var(--accent); margin-bottom: 0.8rem;
+}
+.tl-desc {
+  font-family: 'IM Fell English', serif;
+  font-size: 0.9rem; color: var(--white3); line-height: 1.9;
+  max-width: 560px;
+  font-style: italic;
+}
+
+/* ══════════════════════════════════════
+   SKILLS — ANÁLISE DE CAPACIDADES
+══════════════════════════════════════ */
+.skills-wrap { display: flex; flex-direction: column; gap: 0; }
+.skill-row {
+  display: flex; align-items: center;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid rgba(200,169,110,0.06);
+  gap: 1rem;
+  transition: background 0.15s;
+}
+.skill-row:hover { background: rgba(200,169,110,0.03); margin: 0 -1rem; padding-left: 1rem; padding-right: 1rem; }
+.skill-row:last-child { border-bottom: none; }
+.skill-name {
+  flex: 1; font-family: 'Share Tech Mono', monospace;
+  font-size: 0.82rem; color: var(--white2);
+}
+.skill-meter {
+  width: 120px; height: 3px;
+  background: var(--void5);
+  position: relative; overflow: hidden;
+}
+.skill-fill {
+  position: absolute; top: 0; left: 0; bottom: 0;
+  background: linear-gradient(90deg, var(--accent3), var(--accent));
+  transition: width 1s ease;
+}
+.skill-fill.red {
+  background: linear-gradient(90deg, var(--red-dim), var(--red));
+}
+.skill-pct {
+  font-size: 0.58rem; color: var(--white4); letter-spacing: 0.1em;
+  width: 32px; text-align: right;
+}
+
+/* Ferramentas */
+.tools-grid {
+  display: flex; flex-wrap: wrap; gap: 0.5rem;
+  margin-top: 2.5rem; padding-top: 2rem;
+  border-top: 1px solid var(--border);
+}
+.tool-tag {
+  font-size: 0.65rem; letter-spacing: 0.1em;
+  padding: 0.3rem 0.8rem;
+  border: 1px solid var(--border);
+  color: var(--white3);
+  background: rgba(200,169,110,0.03);
+  transition: border-color 0.2s, color 0.2s, background 0.2s;
+}
+.tool-tag:hover {
+  border-color: var(--accent2); color: var(--accent); background: rgba(200,169,110,0.07);
+}
+
+/* ══════════════════════════════════════
+   BUG BOUNTY — RELATÓRIO DE CAMPO
+══════════════════════════════════════ */
+.report-box {
+  border: 1px solid var(--border2);
+  padding: 2rem 2.5rem;
+  max-width: 680px;
+  position: relative;
+  background: rgba(200,169,110,0.02);
+}
+.report-box::before {
+  content: 'RELATÓRIO DE CAMPO · L';
+  position: absolute; top: -0.65rem; left: 1.5rem;
+  background: var(--void);
+  font-size: 0.5rem; letter-spacing: 0.4em; color: var(--accent);
+  padding: 0 0.6rem;
+}
+.report-box::after {
+  content: '';
+  position: absolute; top: 8px; left: 8px; right: -8px; bottom: -8px;
+  border: 1px solid var(--border);
+  pointer-events: none;
+}
+.report-box p {
+  font-family: 'IM Fell English', serif;
+  font-style: italic;
+  color: var(--white2); font-size: 0.95rem; line-height: 2;
+}
+.report-box u {
+  text-decoration: none;
+  border-bottom: 1px solid var(--accent2);
+  color: var(--accent);
+}
+
+/* Tags de vulnerabilidade */
+.vuln-tags {
+  display: flex; flex-wrap: wrap; gap: 0.4rem;
+  margin-top: 1.2rem; padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+.vtag {
+  font-size: 0.58rem; letter-spacing: 0.12em;
+  padding: 0.18rem 0.55rem;
+  background: rgba(204,34,34,0.08);
+  border: 1px solid rgba(204,34,34,0.25);
+  color: #e05050;
+}
+
+/* ══════════════════════════════════════
+   FORMAÇÃO — DOSSIÊ DE TREINAMENTO
+══════════════════════════════════════ */
+.certs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+}
+.cert-card {
+  border: 1px solid var(--border);
+  padding: 1.4rem;
+  background: var(--void2);
+  position: relative; overflow: hidden;
+  transition: border-color 0.25s, background 0.25s;
+}
+.cert-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent2), transparent);
+  transform: scaleX(0);
+  transition: transform 0.35s ease;
+}
+.cert-card:hover { border-color: var(--border2); background: var(--void3); }
+.cert-card:hover::before { transform: scaleX(1); }
+
+/* canto dobrado */
+.cert-card::after {
+  content: '';
+  position: absolute; top: 0; right: 0;
+  width: 18px; height: 18px;
+  background: linear-gradient(225deg, var(--void4) 50%, transparent 50%);
+}
+.cert-icon { font-size: 1rem; margin-bottom: 0.7rem; color: var(--accent2); }
+.cert-name {
+  font-family: 'IM Fell English', serif;
+  font-size: 0.92rem; color: var(--white); margin-bottom: 0.2rem;
+}
+.cert-org {
+  font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--white4); margin-bottom: 0.6rem;
+}
+.cert-status {
+  font-size: 0.56rem; letter-spacing: 0.15em; text-transform: uppercase;
+  padding: 0.12rem 0.45rem; border: 1px solid;
+}
+.st-prog  { color: var(--accent2); border-color: var(--accent3); background: rgba(200,169,110,0.06); }
+.st-study { color: var(--blue-l);  border-color: rgba(74,122,181,0.4); background: rgba(74,122,181,0.06); }
+.st-done  { color: #4a9a5a; border-color: rgba(74,154,90,0.4); background: rgba(74,154,90,0.06); }
+
+/* ══════════════════════════════════════
+   FOOTER
+══════════════════════════════════════ */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 2.5rem 3rem;
+  display: flex; justify-content: space-between; align-items: center;
+  position: relative; z-index: 10;
+  background: var(--void);
+}
+.footer-l {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2.5rem; color: var(--white);
+  letter-spacing: 0.1em; line-height: 1;
+  text-shadow: 0 0 30px rgba(200,169,110,0.3);
+}
+.footer-text {
+  font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--white4); line-height: 2;
+  text-align: center;
+}
+.footer-quote {
+  font-family: 'IM Fell English', serif;
+  font-style: italic; color: var(--white3);
+  font-size: 0.82rem; text-align: right; max-width: 260px; line-height: 1.7;
+}
+
+/* ══════════════════════════════════════
+   DECORAÇÃO: FINGERPRINT FUNDO
+══════════════════════════════════════ */
+.bg-deco {
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
+.bg-deco svg {
+  width: 70vh; height: 70vh; opacity: 0.018;
+}
+
+/* ══════════════════════════════════════
+   REVEAL ANIMATION
+══════════════════════════════════════ */
+.reveal {
+  opacity: 0; transform: translateY(20px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.reveal.visible { opacity: 1; transform: none; }
+
+/* ── TYPING CURSOR ── */
+.cursor-blink {
+  display: inline-block;
+  width: 2px; height: 1em;
+  background: var(--accent);
+  margin-left: 2px;
+  animation: blink 1s step-end infinite;
+  vertical-align: middle;
+}
+@keyframes blink {
+  0%,100% { opacity: 1; } 50% { opacity: 0; }
+}
+
+/* ── NÚMERO DE CASO flutuante ── */
+.case-float {
+  position: fixed; right: 1.5rem; top: 50%;
+  transform: translateY(-50%) rotate(90deg);
+  transform-origin: center;
+  font-size: 0.5rem; letter-spacing: 0.45em; text-transform: uppercase;
+  color: var(--white4); z-index: 20;
+}
+
+/* ══════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════ */
+@media (max-width: 860px) {
+  #hero { grid-template-columns: 1fr; }
+  .hero-left { display: none; }
+  nav ul { display: none; }
+  .nav-prob { display: none; }
+  .sw { padding: 4rem 1.5rem; }
+  .section-div { padding: 0 1.5rem; }
+  footer { flex-direction: column; gap: 1.2rem; text-align: center; }
+  .footer-quote { text-align: center; }
+  nav { padding: 0 1.5rem; }
+  .profile-grid { grid-template-columns: 1fr; }
+  .case-float { display: none; }
+  .hero-right { padding: 6rem 1.5rem 3rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- Textura de ruído -->
+<div class="grain"></div>
+
+
+
+<!-- Número de caso lateral -->
+<div class="case-float">CASO Nº 001 — JUAN PABLO · 2026</div>
+
+<!-- ═══════════ NAV ═══════════ -->
+<nav>
+  <div class="nav-id">
+    <div class="nav-l">
+      <svg viewBox="0 0 70 110" width="28" height="44" xmlns="http://www.w3.org/2000/svg" style="display:block; overflow:visible">
+        <text x="2" y="80" font-family="'UnifrakturMaguntia', serif" font-size="82" fill="#e8e8e8" style="filter:drop-shadow(0 0 8px rgba(200,169,110,0.5))">J</text>
+      </svg>
+    </div>
+    <div class="nav-case">Hacking Ativo</div>
+  </div>
+  <ul>
+    <li><a href="#sobre">Identidade</a></li>
+    <li><a href="#exp">Casos</a></li>
+    <li><a href="#skills">Capacidades</a></li>
+    <li><a href="#certs">Formação</a></li>
+  </ul>
+  <div class="nav-prob">
+    Probabilidade de ser hackeado: <strong>97%</strong>
+  </div>
+</nav>
+
+<!-- ═══════════ HERO ═══════════ -->
+<section id="hero">
+
+  <!-- Coluna Esquerda — J gótico + monitores -->
+  <div class="hero-left">
+    <div class="hero-left-label">Segurança Ofensiva · Pentest · Red Team</div>
+
+    <!-- J gótico centralizado no estilo Death Note -->
+    <div class="j-letter-wrap">
+      <svg class="j-gothic" viewBox="0 0 260 360" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <filter id="j-glow">
+            <feGaussianBlur stdDeviation="6" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+          <filter id="j-glow2">
+            <feGaussianBlur stdDeviation="18"/>
+          </filter>
+        </defs>
+        <!-- Halo de brilho -->
+        <text x="30" y="230" font-family="'UnifrakturMaguntia', serif" font-size="260"
+              fill="rgba(200,169,110,0.08)" filter="url(#j-glow2)">J</text>
+        <!-- Sombra escura -->
+        <text x="34" y="234" font-family="'UnifrakturMaguntia', serif" font-size="260"
+              fill="rgba(0,0,0,0.6)">J</text>
+        <!-- J principal branco -->
+        <text x="30" y="230" font-family="'UnifrakturMaguntia', serif" font-size="260"
+              fill="#e8e8e8" filter="url(#j-glow)">J</text>
+        <!-- Linha decorativa abaixo do descendente -->
+        <line x1="20" y1="348" x2="240" y2="348" stroke="rgba(200,169,110,0.3)" stroke-width="1"/>
+      </svg>
+    </div>
+
+    <!-- Monitores com ruído — iluminação ambiente ~20% -->
+    <div class="monitors-scene">
+      <canvas class="monitor-canvas" id="mon4"></canvas>
+      <canvas class="monitor-canvas" id="mon1"></canvas>
+      <canvas class="monitor-canvas" id="mon2"></canvas>
+      <canvas class="monitor-canvas" id="mon3"></canvas>
+      <canvas class="monitor-canvas" id="mon5"></canvas>
+    </div>
+  </div>
+
+  <!-- Coluna Direita -->
+  <div class="hero-right">
+    <!-- Linhas de evidência decorativas -->
+    <div class="evidence-lines">
+      <svg viewBox="0 0 600 700" xmlns="http://www.w3.org/2000/svg">
+        <line x1="50" y1="120" x2="300" y2="200" stroke="#cc2222" stroke-width="0.8"/>
+        <line x1="300" y1="200" x2="520" y2="150" stroke="#cc2222" stroke-width="0.8"/>
+        <line x1="180" y1="350" x2="400" y2="280" stroke="#cc2222" stroke-width="0.8"/>
+        <circle cx="50" cy="120" r="3" fill="#cc2222"/>
+        <circle cx="300" cy="200" r="3" fill="#cc2222"/>
+        <circle cx="520" cy="150" r="3" fill="#cc2222"/>
+        <circle cx="180" cy="350" r="3" fill="#cc2222"/>
+        <circle cx="400" cy="280" r="3" fill="#cc2222"/>
+      </svg>
+    </div>
+
+    <div class="dossier-tag">DOSSIÊ · CASO Nº 001 — INVESTIGAÇÃO ATIVA</div>
+
+    <h1 class="suspect-name">
+      Juan Pablo
+      <span>Pesquisador · Segurança Ofensiva<span class="cursor-blink"></span></span>
+    </h1>
+
+    <div class="suspect-role">Pentest &nbsp;·&nbsp; Red Team &nbsp;·&nbsp; Bug Bounty Hunter</div>
+
+    <div class="deduction">
+      <p>
+        Pesquisador de segurança ofensiva. Atua esporadicamente em programas
+        de bug bounty na HackerOne, identificando e reportando vulnerabilidades
+        reais em empresas ao redor do mundo. Cada sistema testado é conhecimento
+        que não se apaga.
+      </p>
+    </div>
+
+    <div class="hero-actions">
+      <a class="btn" href="#exp"><span>→ Ver Casos</span></a>
+      <a class="btn btn-ghost" href="https://linkedin.com/in/juan-pablo3a367228a" target="_blank" rel="noopener"><span>LinkedIn ↗</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ IDENTIDADE ═══════════ -->
+<div class="section-div"><hr><span>identidade</span></div>
+<div class="sw" id="sobre">
+  <div class="sl reveal">
+    <span class="sl-num">01 ——</span>
+    <h2 class="sl-title">Perfil do Suspeito</h2>
+    <div class="sl-rule"></div>
+  </div>
+
+  <div class="profile-grid reveal">
+    <div class="profile-card">
+      <h3>identidade</h3>
+      <p>Juan Pablo — pesquisador de segurança ofensiva com foco em pentest e red team. Caça vulnerabilidades reais em empresas globais, reportando-as de forma responsável via HackerOne.</p>
+    </div>
+    <div class="profile-card">
+      <h3>missão</h3>
+      <p>Crescimento contínuo em segurança da informação. Cada vulnerabilidade reportada é conhecimento consolidado. Em busca de oportunidades para causar impacto real na área de segurança ofensiva.</p>
+    </div>
+    <div class="profile-card">
+      <h3>áreas de atuação</h3>
+      <p>Web Exploitation · OSINT · Engenharia Social · Pentest · Red Teaming · Network Security · Hacking de Infraestrutura</p>
+    </div>
+    <div class="profile-card">
+      <h3>contato direto</h3>
+      <p><a href="https://linkedin.com/in/juan-pablo3a367228a" target="_blank" rel="noopener">linkedin.com/in/juan-pablo3a367228a</a></p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ CASOS ═══════════ -->
+<div class="section-div"><hr><span>casos</span></div>
+<div class="sw" id="exp">
+  <div class="sl reveal">
+    <span class="sl-num">02 ——</span>
+    <h2 class="sl-title">Linha do Tempo</h2>
+    <div class="sl-rule"></div>
+  </div>
+
+  <div class="timeline reveal">
+    <div class="tl-item">
+      <div class="tl-year">2026<br>atual</div>
+      <div class="tl-dot"></div>
+      <div class="tl-content">
+        <div class="tl-title">Bug Bounty Hunter</div>
+        <div class="tl-org">HackerOne — Plataforma de Bug Bounty</div>
+        <div class="tl-badge">fev/2026 — presente</div>
+        <p class="tl-desc">
+          Realização de testes de intrusão para empresas globais, identificando e reportando
+          vulnerabilidades em programas de bug bounty. Foco em web exploitation,
+          OSINT e mapeamento de superfície de ataque.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ CAPACIDADES ═══════════ -->
+<div class="section-div"><hr><span>capacidades</span></div>
+<div class="sw" id="skills">
+  <div class="sl reveal">
+    <span class="sl-num">03 ——</span>
+    <h2 class="sl-title">Arsenal</h2>
+    <div class="sl-rule"></div>
+  </div>
+
+  <div class="skills-wrap reveal">
+    <div class="skill-row">
+      <span class="skill-name">Web Exploitation</span>
+      <div class="skill-meter"><div class="skill-fill red" style="width:80%"></div></div>
+      <span class="skill-pct">80%</span>
+    </div>
+    <div class="skill-row">
+      <span class="skill-name">OSINT / Info Gathering</span>
+      <div class="skill-meter"><div class="skill-fill red" style="width:80%"></div></div>
+      <span class="skill-pct">80%</span>
+    </div>
+    <div class="skill-row">
+      <span class="skill-name">Engenharia Social</span>
+      <div class="skill-meter"><div class="skill-fill" style="width:80%"></div></div>
+      <span class="skill-pct">80%</span>
+    </div>
+    <div class="skill-row">
+      <span class="skill-name">Google Hacking</span>
+      <div class="skill-meter"><div class="skill-fill red" style="width:80%"></div></div>
+      <span class="skill-pct">80%</span>
+    </div>
+    <div class="skill-row">
+      <span class="skill-name">Metasploit Framework</span>
+      <div class="skill-meter"><div class="skill-fill" style="width:90%"></div></div>
+      <span class="skill-pct">90%</span>
+    </div>
+    <div class="skill-row">
+      <span class="skill-name">Linux / Bash</span>
+      <div class="skill-meter"><div class="skill-fill red" style="width:80%"></div></div>
+      <span class="skill-pct">80%</span>
+    </div>
+    <div class="skill-row">
+      <span class="skill-name">TCP/IP</span>
+      <div class="skill-meter"><div class="skill-fill" style="width:80%"></div></div>
+      <span class="skill-pct">80%</span>
+    </div>
+    <div class="skill-row">
+      <span class="skill-name">DNS / HTTP / HTTPS</span>
+      <div class="skill-meter"><div class="skill-fill" style="width:80%"></div></div>
+      <span class="skill-pct">80%</span>
+    </div>
+    <div class="skill-row">
+      <span class="skill-name">Análise de Tráfego</span>
+      <div class="skill-meter"><div class="skill-fill" style="width:73%"></div></div>
+      <span class="skill-pct">73%</span>
+    </div>
+    <div class="skill-row">
+      <span class="skill-name">Hacking de Infraestrutura</span>
+      <div class="skill-meter"><div class="skill-fill" style="width:90%"></div></div>
+      <span class="skill-pct">90%</span>
+    </div>
+    <div class="skill-row">
+      <span class="skill-name">Python</span>
+      <div class="skill-meter"><div class="skill-fill red" style="width:80%"></div></div>
+      <span class="skill-pct">80%</span>
+    </div>
+    <div class="skill-row">
+      <span class="skill-name">Bash / Shell Script</span>
+      <div class="skill-meter"><div class="skill-fill" style="width:80%"></div></div>
+      <span class="skill-pct">80%</span>
+    </div>
+    <div class="skill-row">
+      <span class="skill-name">PowerShell</span>
+      <div class="skill-meter"><div class="skill-fill" style="width:60%"></div></div>
+      <span class="skill-pct">60%</span>
+    </div>
+    <div class="skill-row">
+      <span class="skill-name">C</span>
+      <div class="skill-meter"><div class="skill-fill" style="width:60%"></div></div>
+      <span class="skill-pct">60%</span>
+    </div>
+    <div class="skill-row">
+      <span class="skill-name">Inglês — Fluente</span>
+      <div class="skill-meter"><div class="skill-fill red" style="width:100%"></div></div>
+      <span class="skill-pct">100%</span>
+    </div>
+  </div>
+
+  <div class="tools-grid reveal">
+    <span class="tool-tag">Nmap</span>
+    <span class="tool-tag">Burp Suite</span>
+    <span class="tool-tag">Wireshark</span>
+    <span class="tool-tag">Scapy</span>
+    <span class="tool-tag">Netcat</span>
+    <span class="tool-tag">Metasploit</span>
+    <span class="tool-tag">SQLmap</span>
+    <span class="tool-tag">Gobuster</span>
+    <span class="tool-tag">ffuf</span>
+    <span class="tool-tag">Hashcat</span>
+    <span class="tool-tag">Kali Linux</span>
+    <span class="tool-tag">Google Dorks</span>
+    <span class="tool-tag">Shodan</span>
+  </div>
+</div>
+
+<!-- ═══════════ BUG BOUNTY ═══════════ -->
+<div class="section-div"><hr><span>campo</span></div>
+<div class="sw" id="bounty">
+  <div class="sl reveal">
+    <span class="sl-num">04 ——</span>
+    <h2 class="sl-title">Bug Bounty</h2>
+    <div class="sl-rule"></div>
+  </div>
+
+  <div class="report-box reveal">
+    <p>
+      Operando <u>esporadicamente</u> na plataforma <u>HackerOne</u>, realizando testes de intrusão
+      para empresas globais. Cada relatório submetido representa uma contribuição real
+      para a segurança digital — responsabilidade e ética acima de tudo.<br><br>
+      Metodologia focada em encontrar o que outros não veem. Cada sistema é um quebra-cabeça,
+      cada vulnerabilidade uma dedução que só era necessária a atenção certa.
+    </p>
+    <div class="vuln-tags">
+      <span class="vtag">Web Vulnerabilities</span>
+      <span class="vtag">Information Disclosure</span>
+      <span class="vtag">IDOR</span>
+      <span class="vtag">XSS</span>
+      <span class="vtag">SSRF</span>
+      <span class="vtag">Enumeration Avançada</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ FORMAÇÃO ═══════════ -->
+<div class="section-div"><hr><span>formação</span></div>
+<div class="sw" id="certs">
+  <div class="sl reveal">
+    <span class="sl-num">05 ——</span>
+    <h2 class="sl-title">Dossiê de Treinamento</h2>
+    <div class="sl-rule"></div>
+  </div>
+
+  <div class="certs-grid reveal">
+    <div class="cert-card">
+      <div class="cert-icon">◈</div>
+      <div class="cert-name">DCPT</div>
+      <div class="cert-org">Desec Security</div>
+      <span class="cert-status st-prog">em andamento</span>
+    </div>
+    <div class="cert-card">
+      <div class="cert-icon">◈</div>
+      <div class="cert-name">C3SA</div>
+      <div class="cert-org">CyberWareFares</div>
+      <span class="cert-status st-prog">em andamento</span>
+    </div>
+    <div class="cert-card">
+      <div class="cert-icon">◈</div>
+      <div class="cert-name">Pentest Professional</div>
+      <div class="cert-org">Desec Security</div>
+      <span class="cert-status st-prog">em andamento</span>
+    </div>
+    <div class="cert-card">
+      <div class="cert-icon">◈</div>
+      <div class="cert-name">Pentest Experience V2</div>
+      <div class="cert-org">Desec Security</div>
+      <span class="cert-status st-prog">em andamento</span>
+    </div>
+    <div class="cert-card">
+      <div class="cert-icon">◉</div>
+      <div class="cert-name">Ciência da Computação</div>
+      <div class="cert-org">Estácio</div>
+      <span class="cert-status st-study">cursando</span>
+    </div>
+    <div class="cert-card">
+      <div class="cert-icon">◉</div>
+      <div class="cert-name">Inglês Avançado</div>
+      <div class="cert-org">Wizard</div>
+      <span class="cert-status st-done">fluente</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ FOOTER ═══════════ -->
+<footer>
+  <div class="footer-l">
+    <svg viewBox="0 0 70 110" width="38" height="56" xmlns="http://www.w3.org/2000/svg" style="overflow:visible">
+      <text x="2" y="80" font-family="'UnifrakturMaguntia', serif" font-size="82" fill="#e8e8e8" style="filter:drop-shadow(0 0 12px rgba(200,169,110,0.4))">J</text>
+    </svg>
+  </div>
+  <div class="footer-text">
+    Juan Pablo · Security Researcher · 2026<br>
+    CASO Nº 001 · INVESTIGAÇÃO EM ANDAMENTO
+  </div>
+  <div class="footer-quote">
+    "A probabilidade de ser hackeado<br>é de 97%." — J
+  </div>
+</footer>
+
+<script>
+// Reveal on scroll
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.08 });
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+// Animar barras de skill quando visíveis
+const skillObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.querySelectorAll('.skill-fill').forEach(bar => {
+        const w = bar.style.width;
+        bar.style.width = '0';
+        setTimeout(() => { bar.style.width = w; }, 100);
+      });
+      skillObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.1 });
+document.querySelectorAll('.skills-wrap').forEach(el => skillObs.observe(el));
+
+// ── MONITORES COM RUÍDO BRANCO ──
+// Configuração de cada monitor: [id, largura, altura, opacidade_max]
+const monitorCfg = [
+  { id: 'mon4', w: 85,  h: 58,  alpha: 0.20, scale: 0.85 },
+  { id: 'mon1', w: 110, h: 75,  alpha: 0.20, scale: 1.0 },
+  { id: 'mon2', w: 140, h: 95,  alpha: 0.20, scale: 1.15 },
+  { id: 'mon3', w: 100, h: 68,  alpha: 0.20, scale: 0.92 },
+  { id: 'mon5', w: 80,  h: 55,  alpha: 0.20, scale: 0.80 },
+];
+
+monitorCfg.forEach(cfg => {
+  const canvas = document.getElementById(cfg.id);
+  if (!canvas) return;
+
+  // Tamanho visual via CSS scaling — canvas pequeno para performance
+  const PW = cfg.w, PH = cfg.h;
+  canvas.width  = PW;
+  canvas.height = PH;
+  canvas.style.width  = Math.round(PW * cfg.scale) + 'px';
+  canvas.style.height = Math.round(PH * cfg.scale) + 'px';
+
+  const ctx = canvas.getContext('2d');
+  const imgData = ctx.createImageData(PW, PH);
+  const data = imgData.data;
+
+  // Parâmetros de variação temporal — cada monitor tem ritmo diferente
+  let tick = Math.random() * 1000;
+  const speed = 0.6 + Math.random() * 0.8;
+
+  // Scanlines ocasionais
+  let scanY = Math.random() * PH;
+  let scanSpeed = 0.4 + Math.random() * 0.6;
+
+  function drawNoise() {
+    tick += speed;
+    scanY = (scanY + scanSpeed) % PH;
+
+    for (let i = 0; i < PW * PH; i++) {
+      // Ruído base
+      let v = (Math.random() * 255) | 0;
+
+      // Linha de scan — faixa mais clara
+      const row = (i / PW) | 0;
+      const scanDist = Math.abs(row - scanY);
+      if (scanDist < 2) v = Math.min(255, v + 60 * (1 - scanDist / 2));
+
+      // Variação vertical — linhas horizontais com intensidade diferente
+      const lineVar = Math.sin((row + tick * 0.3) * 0.4) * 18;
+      v = Math.max(0, Math.min(255, v + lineVar));
+
+      const idx = i * 4;
+      data[idx]     = v;       // R
+      data[idx + 1] = v;       // G
+      data[idx + 2] = v;       // B
+      data[idx + 3] = (cfg.alpha * 255) | 0; // A — ~20% opacidade
+    }
+
+    ctx.putImageData(imgData, 0, 0);
+    requestAnimationFrame(drawNoise);
+  }
+
+  drawNoise();
+});
+
+// Typing effect no nome
+const nameEl = document.querySelector('h1.suspect-name');
+if (nameEl) {
+  nameEl.style.opacity = '0';
+  nameEl.style.transition = 'opacity 0.4s';
+  setTimeout(() => { nameEl.style.opacity = '1'; }, 300);
+}
+</script>
+</body>
+</html>
