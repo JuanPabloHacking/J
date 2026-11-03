@@ -1,1 +1,232 @@
 
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Dossiê Digital · Juan Pablo</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=IM+Fell+English:ital@0;1&family=Bebas+Neue&display=swap"
+          rel="stylesheet">
+
+    <style>
+        :root {
+            --void: #000000;
+            --void2: #080808;
+            --white: #e8e8e8;
+            --white2: #c0c0c0;
+            --white3: #888;
+            --accent: #c8a96e;
+            --accent2: #8b6a3a;
+            --border: rgba(200,169,110,0.15);
+            --border2: rgba(200,169,110,0.35);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--void);
+            color: var(--white);
+            font-family: 'Share Tech Mono', monospace;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        /* CABEÇALHO */
+
+        .viewer-header {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            height: 76px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+
+            padding: 0 3rem;
+
+            background: rgba(0,0,0,0.97);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .viewer-brand {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            min-width: 0;
+        }
+
+        .viewer-logo {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2.5rem;
+            color: var(--white);
+            text-shadow: 0 0 15px rgba(200,169,110,0.4);
+        }
+
+        .viewer-info {
+            min-width: 0;
+        }
+
+        .viewer-label {
+            display: block;
+            font-size: 0.52rem;
+            letter-spacing: 0.25em;
+            color: var(--accent2);
+            text-transform: uppercase;
+        }
+
+        #pdf-title {
+            font-family: 'IM Fell English', serif;
+            font-size: 1.1rem;
+            font-weight: normal;
+            color: var(--white);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* BOTÕES */
+
+        .viewer-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+        }
+
+        .viewer-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 0.55rem 1rem;
+
+            color: var(--white);
+            text-decoration: none;
+
+            border: 1px solid var(--border2);
+            background: transparent;
+
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.58rem;
+            letter-spacing: 0.15em;
+
+            transition: 0.2s;
+        }
+
+        .viewer-link:hover {
+            background: var(--accent);
+            color: var(--void);
+        }
+
+        /* VISUALIZADOR */
+
+        .viewer-main {
+            width: 100%;
+            height: calc(100vh - 76px);
+            background: #181818;
+        }
+
+        #pdf-frame {
+            width: 100%;
+            height: 100%;
+            display: block;
+            border: none;
+            background: #181818;
+        }
+
+        /* ERROS */
+
+        #pdf-error {
+            padding: 2rem;
+            color: #e05050;
+            text-align: center;
+            font-size: 0.8rem;
+        }
+
+        /* RESPONSIVIDADE */
+
+        @media (max-width: 650px) {
+            .viewer-header {
+                height: 68px;
+                padding: 0 1rem;
+            }
+
+            .viewer-logo {
+                font-size: 2rem;
+            }
+
+            .viewer-label {
+                font-size: 0.42rem;
+            }
+
+            #pdf-title {
+                font-size: 0.9rem;
+                max-width: 38vw;
+            }
+
+            .viewer-link {
+                font-size: 0.46rem;
+                padding: 0.45rem 0.6rem;
+            }
+
+            .viewer-main {
+                height: calc(100vh - 68px);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- CABEÇALHO -->
+
+    <header class="viewer-header">
+
+        <div class="viewer-brand">
+
+            <div class="viewer-logo">J</div>
+
+            <div class="viewer-info">
+
+                <span class="viewer-label">
+                    ARQUIVO DIGITAL · DOSSIÊ DE OPERAÇÃO
+                </span>
+
+                <h1 id="pdf-title">
+                    Carregando documento...
+                </h1>
+
+            </div>
+
+        </div>
+
+    </header>
+
+    <!-- ÁREA DO PDF -->
+
+    <main class="viewer-main">
+
+        <p id="pdf-error" role="alert" hidden></p>
+
+        <iframe
+            id="pdf-frame"
+            title="Visualizador do documento PDF">
+        </iframe>
+
+    </main>
+
+    <!-- JAVASCRIPT DO VISUALIZADOR -->
+
+    <script src="./js/pdf-viewer.js"></script>
+
+</body>
+</html>
+
