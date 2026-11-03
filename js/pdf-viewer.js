@@ -73,7 +73,9 @@ function showError(message) {
 
 const validFilename =
     typeof filename === "string" &&
-    /^[a-zA-Z0-9][a-zA-Z0-9._-]*\.pdf$/i.test(filename);
+    filename.toLowerCase().endsWith(".pdf") &&
+    filename.length <= 180 &&
+    !/[\/\\\u0000-\u001F\u007F]/.test(filename);
 
 
 // ================================================
