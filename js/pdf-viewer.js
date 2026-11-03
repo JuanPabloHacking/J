@@ -122,12 +122,5 @@ if (!validFilename) {
 
     frame.src = viewerURL.href;
 
-
-    // Configurar o download.
-
-    downloadLink.href = pdfURL.href;
-
-    downloadLink.download = filename;
-
 }
 
