@@ -36,11 +36,7 @@ See https://github.com/adobe-type-tools/cmap-resources
 <link rel="resource" type="application/l10n" href="locale/locale.json" />
 <script src="../build/pdf.mjs" type="module"></script>
 
-    <!-- Estilos originais do PDF.js -->
-<link rel="stylesheet" href="./viewer.css?v=3" />
-
-<!-- Personalizações do portfólio -->
-<link rel="stylesheet" href="./viewer-custom.css?v=3" />
+    <link rel="stylesheet" href="viewer.css" />
 
   <script src="viewer.mjs" type="module"></script>
   </head>
@@ -580,31 +576,13 @@ See https://github.com/adobe-type-tools/cmap-resources
                 <div id="editorModeSeparator" class="verticalToolbarSeparator"></div>
 
                 <div class="toolbarHorizontalGroup hiddenMediumView">
+                  <button id="printButton" class="toolbarButton" type="button" tabindex="0" data-l10n-id="pdfjs-print-button">
+                    <span data-l10n-id="pdfjs-print-button-label"></span>
+                  </button>
 
-    <button
-        id="printButton"
-        class="toolbarButton"
-        type="button"
-        tabindex="0"
-        data-l10n-id="pdfjs-print-button">
-
-        <span data-l10n-id="pdfjs-print-button-label"></span>
-
-    </button>
-
-    <button
-        id="downloadButton"
-        class="toolbarButton"
-        type="button"
-        tabindex="0"
-        data-l10n-id="pdfjs-save-button">
-
-        <span data-l10n-id="pdfjs-save-button-label"></span>
-
-    </button>
-
-</div>
-
+                  <button id="downloadButton" class="toolbarButton" type="button" tabindex="0" data-l10n-id="pdfjs-save-button">
+                    <span data-l10n-id="pdfjs-save-button-label"></span>
+                  </button>
                 </div>
 
                 <div class="verticalToolbarSeparator hiddenMediumView"></div>
@@ -628,34 +606,14 @@ See https://github.com/adobe-type-tools/cmap-resources
                         <span data-l10n-id="pdfjs-open-file-button-label"></span>
                       </button>
 
-                      
-<div class="visibleMediumView">
+                      <div class="visibleMediumView">
+                        <button id="secondaryPrint" class="toolbarButton labeled" type="button" tabindex="0" data-l10n-id="pdfjs-print-button">
+                          <span data-l10n-id="pdfjs-print-button-label"></span>
+                        </button>
 
-    <button
-        id="secondaryPrint"
-        class="toolbarButton labeled"
-        type="button"
-        tabindex="0"
-        data-l10n-id="pdfjs-print-button">
-
-        <span data-l10n-id="pdfjs-print-button-label"></span>
-
-    </button>
-
-    <button
-        id="secondaryDownload"
-        class="toolbarButton labeled"
-        type="button"
-        tabindex="0"
-        data-l10n-id="pdfjs-save-button">
-
-        <span data-l10n-id="pdfjs-save-button-label"></span>
-
-    </button>
-
-</div>
-
-
+                        <button id="secondaryDownload" class="toolbarButton labeled" type="button" tabindex="0" data-l10n-id="pdfjs-save-button">
+                          <span data-l10n-id="pdfjs-save-button-label"></span>
+                        </button>
 
                       </div>
 
