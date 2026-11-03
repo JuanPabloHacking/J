@@ -1,21 +1,21 @@
 
 /*
 ================================================
-  PDF.JS — CUSTOMIZAÇÃO DO VISUALIZADOR
-  JUAN PABLO · PORTFOLIO
+  PDF.JS — CUSTOMIZAÇÃO DO PORTFÓLIO
+  JUAN PABLO
 ================================================
 */
 
 /* Ocultar download e impressão */
 
-#downloadButton,
-#secondaryDownload,
 #printButton,
-#secondaryPrint {
+#downloadButton,
+#secondaryPrint,
+#secondaryDownload {
     display: none !important;
 }
 
-/* Remover o separador que acompanhava os botões */
+/* Remover separadores desnecessários */
 
 #toolbarViewerRight > .verticalToolbarSeparator.hiddenMediumView {
     display: none !important;
